@@ -7,7 +7,12 @@ document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessage", function (user, message) {
 
-    //receive the board
+    //board is 1d array of json objects, each object will have
+    //two items: if the cell is on or off and the color
+
+    //receive the board in json format
+
+    //deserialize board
 
     //render the board
 
@@ -27,6 +32,11 @@ connection.start().then(function () {
 document.getElementById("sendButton").addEventListener("click", function (event) {
     var user = document.getElementById("userInput").value;
     var message = document.getElementById("messageInput").value;
+
+    //board is 1d array of json objects, each object will have
+    //two items: if the cell is on or off and the color
+
+    //serialize the board into json
 
     //send the board to the server:
     connection.invoke("SendMessage", user, message).catch(function (err) {
