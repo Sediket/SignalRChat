@@ -71,73 +71,97 @@ namespace SignalRChat.Hubs
 
 
 
-        ///receive board, and index of cell return count of horizontal live cells
-        public int horCheck(cell[] board, int i)
+        public static string avgHexColor(string v1, string v2)
         {
-
-            int count = 0;
-            if (board[i+1].life == 1)
-            {
-                count++;
-            }
-            if (board[i-1].life == 1)
-            {
-                count++;
-            }
-            return count;
+            int red = int.Parse(v1.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+            int green = int.Parse(v1.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            int blue = int.Parse(v1.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+            string avgColor = "#" + (red / 2).ToString("X2") + (green / 2).ToString("X2") + (blue / 2).ToString("X2");
+            return avgColor;
         }
 
-        
 
-        ///return a count of how many vertical cells are live
-        public int vertCheck(cell[] board, int i)
+        ///receive board, and index of cell return count of horizontal live cells
+        public static string[] horCheck(cell[] board, int i)
         {
             int count = 0;
-            if (board[i+18].life == 1)
+            string hexColor = board[i].color;
+            if (board[i + 1].life == 1)
             {
+                count++;
+                hexColor = avgHexColor(board[i + 1].color, hexColor);
+            }
+            if (board[i - 1].life == 1)
+            {
+                hexColor = avgHexColor(board[i + 1].color, hexColor);
+                count++;
+            }
+            string[] retArr = { count.ToString(), hexColor };
+            return retArr;
+        }
+
+
+
+
+
+        ///return a count of how many vertical cells are live
+        public static string[] vertCheck(cell[] board, int i)
+        {
+            int count = 0;
+            string hexColor = board[i].color;
+            if (board[i + 18].life == 1)
+            {
+                hexColor = avgHexColor(board[i + 18].color, hexColor);
                 count++;
             }
             if (board[i - 18].life == 1)
             {
+                hexColor = avgHexColor(board[i - 18].color, hexColor);
                 count++;
             }
-            return count;
+            string[] retArr = { count.ToString(), hexColor };
+            return retArr;
         }
-
 
         ///check if two cells are diagnoally adjacent
 
-        public int diagCheck(cell[] board, int i)
+        public static string[] diagCheck(cell[] board, int i)
         {
             int count = 0;
-            if (board[i+19].life == 1)
+            string hexColor = board[i].color;
+            if (board[i + 19].life == 1)
             {
+                hexColor = avgHexColor(board[i + 19].color, hexColor);
                 count++;
             }
             if (board[i + 17].life == 1)
             {
+                hexColor = avgHexColor(board[i + 17].color, hexColor);
                 count++;
             }
             if (board[i - 19].life == 1)
             {
+                hexColor = avgHexColor(board[i - 19].color, hexColor);
                 count++;
             }
             if (board[i - 17].life == 1)
             {
+                hexColor = avgHexColor(board[i - 17].color, hexColor);
                 count++;
             }
-            return count;
+            string[] retArr = { count.ToString(), hexColor };
+            return retArr;
         }
 
         ///game logic:
         //loop through all relevent cells:
 
-        public void checkBoard(cell[] board)
+        public static void checkBoard(cell[] board)
         {
-            ///example/////////////////
+
             ///board is 16 by 16, with one extra row and column around the board
             ///makeing the board 18 by 18
-            
+
             //start at this cell, the first relevent cell
             int x = 19;
 
@@ -155,16 +179,34 @@ namespace SignalRChat.Hubs
                     //2 Any dead cell with three live neighbors becomes a live cell.
                     //3 All other live cells die in the next generation.Similarly, all other dead cells stay dead
 
-                    int liveNeighbors = horCheck(board, x) + vertCheck(board, x) + diagCheck(board, x);
+                    string[] currArr = horCheck(board, x);
+                    int liveNeighbors = Int32.Parse(currArr[0]);
+                    string hexColor = currArr[1];
+
+                    currArr = vertCheck(board, x);
+                    liveNeighbors += Int32.Parse(currArr[0]);
+                    hexColor = avgHexColor(currArr[1], hexColor);
+
+                    currArr = diagCheck(board, x);
+                    liveNeighbors += Int32.Parse(currArr[0]);
+                    hexColor = avgHexColor(currArr[1], hexColor);
+
+
+                    //int liveNeighbors = horCheck(board, x) + vertCheck(board, x) + diagCheck(board, x);
+
+
+
                     if (board[x].life == 1)
                     {
                         //if live cell
-                        
+
                         if (liveNeighbors == 2 || liveNeighbors == 3)
                         {
                             //live cell stays alive
                             newBoard[x].life = 1;
-                        } else
+                            newBoard[x].color = hexColor;
+                        }
+                        else
                         {
                             //live cell dies
                             newBoard[x].life = 0;
@@ -177,20 +219,16 @@ namespace SignalRChat.Hubs
                         {
                             //becomes alive
                             newBoard[x].life = 1;
-                        } 
+                            newBoard[x].color = hexColor;
+                        }
                         else
                         {
                             newBoard[x].life = 0;
                         }
-                        
                     }
-
-                  
-
+                    x++;
                 }
             }
-
-
             ///example/////////////////
             //int x = 19;
             //while (x < 18 * 17)
