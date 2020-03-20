@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
+using System;
 
 namespace SignalRChat.Hubs
 {
@@ -71,7 +71,7 @@ namespace SignalRChat.Hubs
 
 
 
-        public static string avgHexColor(string v1, string v2)
+        public string avgHexColor(string v1, string v2)
         {
             int red = int.Parse(v1.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
             int green = int.Parse(v1.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
@@ -82,7 +82,7 @@ namespace SignalRChat.Hubs
 
 
         ///receive board, and index of cell return count of horizontal live cells
-        public static string[] horCheck(cell[] board, int i)
+        public string[] horCheck(cell[] board, int i)
         {
             int count = 0;
             string hexColor = board[i].color;
@@ -105,7 +105,7 @@ namespace SignalRChat.Hubs
 
 
         ///return a count of how many vertical cells are live
-        public static string[] vertCheck(cell[] board, int i)
+        public string[] vertCheck(cell[] board, int i)
         {
             int count = 0;
             string hexColor = board[i].color;
@@ -125,7 +125,7 @@ namespace SignalRChat.Hubs
 
         ///check if two cells are diagnoally adjacent
 
-        public static string[] diagCheck(cell[] board, int i)
+        public string[] diagCheck(cell[] board, int i)
         {
             int count = 0;
             string hexColor = board[i].color;
@@ -156,7 +156,7 @@ namespace SignalRChat.Hubs
         ///game logic:
         //loop through all relevent cells:
 
-        public static void checkBoard(cell[] board)
+        public void checkBoard(cell[] board)
         {
 
             ///board is 16 by 16, with one extra row and column around the board
