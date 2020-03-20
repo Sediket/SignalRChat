@@ -70,7 +70,7 @@ namespace SignalRChat.Hubs
         }
 
 
-
+        //hex color to be in the format "#000000"
         public string avgHexColor(string v1, string v2)
         {
             int red = int.Parse(v1.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
