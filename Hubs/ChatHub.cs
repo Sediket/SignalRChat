@@ -18,7 +18,7 @@ namespace SignalRChat.Hubs
         /// <param name="user"></param>
         /// <param name="board"></param>
         /// <returns></returns>
-        public async Task SendMessage(string user, string jsonString)
+        public async Task SendMessage(string jsonString)
         {
 
             //populate oldBoard      
@@ -66,7 +66,7 @@ namespace SignalRChat.Hubs
             ///serialize the new board back into json
             ///send to all clients
 
-            await Clients.All.SendAsync("ReceiveMessage", user, newBoard);
+            await Clients.All.SendAsync("ReceiveMessage", newBoard);
         }
 
 
